@@ -61,6 +61,68 @@
             </div>
           </div>
 
+          <!-- Collapsible Settings Panel -->
+          <div class="mb-4">
+            <button 
+              type="button" 
+              class="btn btn-link p-0 text-decoration-none text-dark fw-bold small text-uppercase d-flex align-items-center" 
+              (click)="showSettings = !showSettings"
+              style="font-size: 0.8rem;">
+              <i class="bi" [class.bi-chevron-down]="showSettings" [class.bi-chevron-right]="!showSettings"></i>
+              <span class="ms-2">Appearance Settings</span>
+            </button>
+            
+            <div *ngIf="showSettings" class="row g-3 mt-2 p-3 bg-light rounded-3 border animate-fade">
+              <!-- Barcode Standard -->
+              <div class="col-12 col-md-6">
+                <label for="configFormat" class="form-label small text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Barcode Standard</label>
+                <select 
+                  id="configFormat" 
+                  name="configFormat" 
+                  class="form-select form-select-sm form-control-premium py-2" 
+                  [(ngModel)]="barcodeConfig.format"
+                  (ngModelChange)="onConfigChange()">
+                  <option value="CODE39">Code 39 (Client Standard - ~60 bars)</option>
+                  <option value="CODE128">Code 128 (Auto/Compact)</option>
+                  <option value="CODE128B">Code 128 Mode B (Wider)</option>
+                </select>
+              </div>
+
+              <!-- Bar Width -->
+              <div class="col-6 col-md-3">
+                <label for="configWidth" class="form-label small text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Bar Width</label>
+                <select 
+                  id="configWidth" 
+                  name="configWidth" 
+                  class="form-select form-select-sm form-control-premium py-2" 
+                  [(ngModel)]="barcodeConfig.width"
+                  (ngModelChange)="onConfigChange()">
+                  <option [value]="2.4">2.4</option>
+                  <option [value]="2.6">2.6</option>
+                  <option [value]="2.8">2.8 (Default)</option>
+                  <option [value]="3.0">3.0</option>
+                  <option [value]="3.2">3.2</option>
+                </select>
+              </div>
+
+              <!-- Bar Height -->
+              <div class="col-6 col-md-3">
+                <label for="configHeight" class="form-label small text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Bar Height</label>
+                <select 
+                  id="configHeight" 
+                  name="configHeight" 
+                  class="form-select form-select-sm form-control-premium py-2" 
+                  [(ngModel)]="barcodeConfig.height"
+                  (ngModelChange)="onConfigChange()">
+                  <option [value]="80">80px</option>
+                  <option [value]="95">95px (Default)</option>
+                  <option [value]="110">110px</option>
+                  <option [value]="120">120px</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <!-- Create Button -->
           <button 
             type="submit" 
@@ -74,9 +136,9 @@
         <div *ngIf="hasGenerated" class="border-top pt-4 mt-2 animate-fade">
           <h3 class="h6 text-uppercase text-muted fw-bold mb-3 text-center">Preview</h3>
           
-          <div class="d-flex justify-content-center p-4 bg-light rounded-3 mb-4 border" style="border-style: dashed !important; border-color: var(--border-color) !important;">
-            <!-- Barcode Canvas Target -->
-            <canvas #barcodeCanvas class="img-fluid"></canvas>
+          <div class="d-flex justify-content-center p-4 bg-light rounded-3 mb-4 border" style="border-style: dashed !important; border-color: var(--border-color) !important; overflow-x: auto;">
+            <!-- Barcode Canvas Target with fixed dimensions and no shrinking -->
+            <canvas #barcodeCanvas style="max-width: none; height: auto;"></canvas>
           </div>
 
           <!-- General error if rendering failed -->

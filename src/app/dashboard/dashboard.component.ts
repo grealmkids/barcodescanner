@@ -22,11 +22,11 @@ export class DashboardComponent {
   
   // Configurable barcode settings (displayValue is kept false as requested)
   barcodeConfig = {
-    format: 'CODE128',
-    width: 2.8,
-    height: 95,
-    margin: 12,
-    displayValue: false,
+    format: 'CODE39',  // Defaulted to CODE39 to match client's ~60 bars reference
+    width: 2.8,        // Standard bar width (default 2.8)
+    height: 95,        // Standard bar height (default 95)
+    margin: 12,        // Standard margin (default 12)
+    displayValue: false, // Keep hidden as requested
     background: '#FFFFFF',
     lineColor: '#000000'
   };
@@ -37,6 +37,7 @@ export class DashboardComponent {
   generalError = '';
 
   hasGenerated = false;
+  showSettings = false;
 
   @ViewChild('barcodeCanvas') barcodeCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -93,6 +94,12 @@ export class DashboardComponent {
     return isValid;
   }
 
+  onConfigChange(): void {
+    if (this.hasGenerated) {
+      this.generateBarcode();
+    }
+  }
+
   generateBarcode(): void {
     if (!this.validateInputs()) {
       this.hasGenerated = false;
@@ -107,7 +114,13 @@ export class DashboardComponent {
     try {
       if (this.barcodeCanvas && this.barcodeCanvas.nativeElement) {
         JsBarcode(this.barcodeCanvas.nativeElement, this.barcodeNumber.trim(), {
-          ...this.barcodeConfig
+          format: this.barcodeConfig.format as any,
+          width: Number(this.barcodeConfig.width),
+          height: Number(this.barcodeConfig.height),
+          margin: Number(this.barcodeConfig.margin),
+          displayValue: this.barcodeConfig.displayValue,
+          background: this.barcodeConfig.background,
+          lineColor: this.barcodeConfig.lineColor
         });
       } else {
         this.generalError = 'Failed to access barcode preview canvas.';
