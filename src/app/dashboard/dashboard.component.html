@@ -26,7 +26,7 @@
               id="barcodeName" 
               name="barcodeName" 
               class="form-control form-control-premium" 
-              placeholder="e.g. Inventory Box 12" 
+              placeholder="e.g. Warehouse Box 01" 
               [(ngModel)]="barcodeName"
               maxlength="50"
               [class.is-invalid]="nameError">
@@ -34,7 +34,7 @@
               <i class="bi bi-exclamation-circle me-1"></i> {{ nameError }}
             </div>
             <div class="form-text text-muted small" style="font-size: 0.8rem;">
-              Only letters, numbers, spaces, and hyphens are allowed. Max 50 chars.
+              Only letters, numbers, spaces, hyphens, and underscores are allowed. Max 50 chars.
             </div>
           </div>
 
@@ -46,22 +46,26 @@
               id="barcodeNumber" 
               name="barcodeNumber" 
               class="form-control form-control-premium" 
-              placeholder="e.g. 98273645" 
+              placeholder="e.g. 0012345678" 
               [(ngModel)]="barcodeNumber"
               required
+              inputmode="numeric"
+              maxlength="10"
+              autocomplete="off"
               [class.is-invalid]="numberError">
             <div *ngIf="numberError" class="invalid-feedback animate-fade">
               <i class="bi bi-exclamation-circle me-1"></i> {{ numberError }}
             </div>
             <div class="form-text text-muted small" style="font-size: 0.8rem;">
-              Required. Digits only (0-9). Length between 4 and 30 characters. No spaces allowed.
+              Required. Exactly 10 digits (0-9). No spaces, letters, or symbols allowed.
             </div>
           </div>
 
           <!-- Create Button -->
           <button 
             type="submit" 
-            class="btn btn-create w-100 py-3 mb-4">
+            class="btn btn-create w-100 py-3 mb-4"
+            [disabled]="!isFormValid()">
             <i class="bi bi-qr-code me-2"></i>Create Barcode
           </button>
         </form>

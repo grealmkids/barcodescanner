@@ -20,6 +20,17 @@ export class DashboardComponent {
   barcodeName = '';
   barcodeNumber = '';
   
+  // Configurable barcode settings (displayValue is kept false as requested)
+  barcodeConfig = {
+    format: 'CODE128',
+    width: 2.8,
+    height: 95,
+    margin: 12,
+    displayValue: false,
+    background: '#FFFFFF',
+    lineColor: '#000000'
+  };
+
   // Validation errors
   nameError = '';
   numberError = '';
@@ -28,6 +39,20 @@ export class DashboardComponent {
   hasGenerated = false;
 
   @ViewChild('barcodeCanvas') barcodeCanvas!: ElementRef<HTMLCanvasElement>;
+
+  // Helper method to check if form is valid (used to disable the button)
+  isFormValid(): boolean {
+    const nameTrimmed = this.barcodeName.trim();
+    if (nameTrimmed) {
+      if (nameTrimmed.length > 50) return false;
+      const nameRegex = /^[a-zA-Z0-9\s\-_]+$/;
+      if (!nameRegex.test(nameTrimmed)) return false;
+    }
+
+    const numberTrimmed = this.barcodeNumber.trim();
+    const digitsRegex = /^[0-9]{10}$/;
+    return digitsRegex.test(numberTrimmed);
+  }
 
   validateInputs(): boolean {
     this.nameError = '';
@@ -42,9 +67,9 @@ export class DashboardComponent {
         this.nameError = 'Barcode name must be 50 characters or less';
         isValid = false;
       }
-      const nameRegex = /^[a-zA-Z0-9\s\-]+$/;
+      const nameRegex = /^[a-zA-Z0-9\s\-_]+$/;
       if (!nameRegex.test(nameTrimmed)) {
-        this.nameError = 'Barcode name can only contain letters, numbers, spaces, and hyphens';
+        this.nameError = 'Barcode name can only contain letters, numbers, spaces, hyphens, and underscores';
         isValid = false;
       }
     }
@@ -55,16 +80,12 @@ export class DashboardComponent {
       this.numberError = 'Barcode number is required';
       isValid = false;
     } else {
-      if (numberTrimmed.includes(' ')) {
-        this.numberError = 'No spaces allowed in barcode number';
-        isValid = false;
-      }
       const digitsRegex = /^\d+$/;
       if (!digitsRegex.test(numberTrimmed)) {
         this.numberError = 'Please enter numbers only';
         isValid = false;
-      } else if (numberTrimmed.length < 4 || numberTrimmed.length > 30) {
-        this.numberError = 'Barcode number must be between 4 and 30 digits';
+      } else if (numberTrimmed.length !== 10) {
+        this.numberError = 'Barcode number must be exactly 10 digits';
         isValid = false;
       }
     }
@@ -86,15 +107,7 @@ export class DashboardComponent {
     try {
       if (this.barcodeCanvas && this.barcodeCanvas.nativeElement) {
         JsBarcode(this.barcodeCanvas.nativeElement, this.barcodeNumber.trim(), {
-          format: 'CODE128',
-          lineColor: '#000000',
-          width: 2.5, // slightly wider lines for high resolution
-          height: 90,
-          displayValue: false,
-          font: 'Inter',
-          fontSize: 16,
-          textMargin: 6,
-          background: '#ffffff'
+          ...this.barcodeConfig
         });
       } else {
         this.generalError = 'Failed to access barcode preview canvas.';
