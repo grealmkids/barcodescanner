@@ -1,0 +1,4 @@
+/* Component-specific dashboard styles */
+.border-top {
+  border-top: 1.5px solid var(--border-color) !important;
+}

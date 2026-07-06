@@ -1,0 +1,58 @@
+<div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center py-5 animate-fade">
+  <div class="text-center mb-4">
+    <!-- Company Logo -->
+    <img src="snapteclogo.jpeg" alt="Snaptec Logo" class="img-fluid mb-2" style="max-height: 80px; object-fit: contain;">
+    <h1 class="brand-text h3 mt-2">SNAPTEC</h1>
+    <p class="heading-grey small text-uppercase tracking-wider">Barcode Generator Portal</p>
+  </div>
+
+  <div class="card card-premium w-100" style="max-width: 420px;">
+    <div class="card-body p-4 p-md-5">
+      <h2 class="h5 mb-4 text-center fw-bold">Internal Corporate Login</h2>
+      
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <div class="mb-4">
+          <label for="password" class="form-label small text-uppercase text-muted fw-bold">Enter Password</label>
+          <div class="input-group">
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="password" 
+              name="password" 
+              class="form-control form-control-premium" 
+              placeholder="••••••••" 
+              [(ngModel)]="password"
+              [disabled]="isLoading"
+              required>
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary" 
+              style="border-color: var(--border-color); border-top-right-radius: 8px; border-bottom-right-radius: 8px;"
+              (click)="togglePasswordVisibility()"
+              [disabled]="isLoading">
+              <i class="bi" [class.bi-eye-slash]="showPassword" [class.bi-eye]="!showPassword"></i>
+            </button>
+          </div>
+          
+          <!-- Validation / Error Message -->
+          <div *ngIf="errorMessage" class="text-danger small mt-2 d-flex align-items-center animate-fade">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ errorMessage }}
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn btn-create w-100 py-3 d-flex align-items-center justify-content-center"
+          [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ isLoading ? 'Checking...' : 'Login' }}
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="mt-4 text-center text-muted small">
+    <p class="mb-0">&copy; {{ currentYear }} Snaptec. All rights reserved.</p>
+    <p class="text-muted-50" style="font-size: 0.75rem;">Authorized Internal Personnel Only</p>
+  </div>
+</div>
